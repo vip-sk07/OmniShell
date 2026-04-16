@@ -48,3 +48,4 @@ Go back to your browser. You can now type any Linux command (even from other dis
 - **Universal Translation**: Type `pacman` commands on Debian; it works automatically.
 - **Analytical Dashboard**: Track command history and usage frequency.
 - **Secure Handshake**: 256-bit encrypted API token authentication.
+# OmniShell
