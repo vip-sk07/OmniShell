@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universal Linux Terminal - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <div class="terminal-container" style="width: 400px; max-width: 90%; height: auto; min-height: 350px;">
+        <div class="terminal-header">
+            <div class="circles">
+                <div class="circle red"></div>
+                <div class="circle yellow"></div>
+                <div class="circle green"></div>
+            </div>
+            <div class="title">Create User Provision</div>
+        </div>
+        <div style="padding: 30px; font-family: 'Fira Code', monospace; color: #a9b1d6; background: #1a1b26; height: calc(100% - 40px); border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+            {% if error %}
+            <p style="color: #f7768e; margin-bottom: 20px;">[Error] {{ error }}</p>
+            {% endif %}
+            <form action="/register" method="POST">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #7aa2f7; margin-bottom: 8px;">New Username:</label>
+                    <input type="text" name="username" style="width: calc(100% - 22px); background: #0f111a; border: 1px solid #444b6a; color: #a9b1d6; padding: 10px; border-radius: 4px; outline: none; font-family: 'Fira Code';" required>
+                </div>
+                <div style="margin-bottom: 30px;">
+                    <label style="display: block; color: #7aa2f7; margin-bottom: 8px;">New Password:</label>
+                    <input type="password" name="password" style="width: calc(100% - 22px); background: #0f111a; border: 1px solid #444b6a; color: #a9b1d6; padding: 10px; border-radius: 4px; outline: none; font-family: 'Fira Code';" required>
+                </div>
+                <button type="submit" style="width: 100%; background: #9ece6a; color: #1a1b26; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-family: 'Fira Code', monospace; font-weight: bold; font-size: 16px;">Provision Account</button>
+            </form>
+            <p style="margin-top: 25px; font-size: 0.9em; text-align: center;">Already have access? <a href="/login" style="color: #7aa2f7; text-decoration: none; border-bottom: 1px solid #7aa2f7;">Login here</a></p>
+        </div>
+    </div>
+</body>
+</html>

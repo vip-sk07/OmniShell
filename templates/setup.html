@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Guide | Universal Linux Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .setup-card {
+            background: #1a1b26;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 800px;
+            margin: 50px auto;
+            border: 1px solid #24283b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .warning-banner {
+            background: rgba(247, 118, 142, 0.1);
+            border-left: 4px solid #f7768e;
+            padding: 15px;
+            margin-bottom: 30px;
+            color: #f7768e;
+            font-weight: bold;
+        }
+        .step {
+            margin-bottom: 25px;
+        }
+        .step-num {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #bb9af7;
+            color: #1a1b26;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        .code-box {
+            background: #0f111a;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-family: 'Fira Code', monospace;
+            color: #9ece6a;
+            position: relative;
+        }
+        .copy-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: #414868;
+            border: none;
+            color: #a9b1d6;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        .download-btn {
+            display: inline-block;
+            background: #bb9af7;
+            color: #1a1b26;
+            padding: 12px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: transform 0.2s;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            background: #ff007c;
+            color: white;
+        }
+        .go-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: #7aa2f7;
+            color: #1a1b26;
+            padding: 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body style="background: #16161e; color: #a9b1d6; font-family: 'Fira Code', monospace;">
+    <div class="setup-card">
+        <h1 style="color: #7aa2f7; margin-bottom: 10px;">Welcome, {{ username }}!</h1>
+        <p style="margin-bottom: 30px; color: #565f89;">Follow these steps to synchronize your Linux machine with the cloud dashboard.</p>
+
+        <div class="warning-banner">
+            ⚠️ COMPATIBILITY WARNING: This system is designed EXCLUSIVELY for Linux distributions (Parrot, Ubuntu, Arch, etc.). Remote Agent execution is NOT supported on Windows.
+        </div>
+
+        <div class="step">
+            <h3><span class="step-num">1</span> Download the Agent Suite</h3>
+            <p>Download the standardized agent package. <b>Ensure you keep these 3 items together in the same folder:</b></p>
+            <ul style="color: #9ece6a; margin: 10px 0; font-size: 0.9em; list-style-type: '📂 ';">
+                <li>install.sh</li>
+                <li>universal_terminal_agent/ (Folder)</li>
+                <li>pyproject.toml</li>
+            </ul>
+            <div style="display: flex; gap: 15px;">
+                <a href="/download_agent" class="download-btn">Download Agent Suite (.zip)</a>
+                <a href="/download_installer" class="download-btn" style="background: #414868; color: #a9b1d6;">Download install.sh only</a>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-num">2</span> Professional Installation</h3>
+            <p>Open your local terminal in the downloaded folder and run our professional installer:</p>
+            <div class="code-box">
+                sudo bash install.sh
+                <button class="copy-btn" onclick="copyText('sudo bash install.sh')">Copy</button>
+            </div>
+        </div>
+
+        <div class="step">
+            <h3><span class="step-num">3</span> Secure Handshake</h3>
+            <p>Once installed, execute the global command to connect to this dashboard:</p>
+            <div class="code-box">
+                universal-agent --token={{ api_token }}
+                <button class="copy-btn" onclick="copyText('universal-agent --token={{ api_token }}')">Copy</button>
+            </div>
+        </div>
+
+        <a href="/" class="go-btn">I'm Ready! Go to Terminal 🚀</a>
+    </div>
+
+    <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text);
+            alert("Copied to clipboard!");
+        }
+    </script>
+</body>
+</html>

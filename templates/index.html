@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Universal Linux Terminal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm/css/xterm.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit/lib/xterm-addon-fit.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+</head>
+<body>
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="circles">
+                <div class="circle red"></div>
+                <div class="circle yellow"></div>
+                <div class="circle green"></div>
+            </div>
+            <div class="title">Universal Linux Terminal</div>
+            <div style="position: absolute; right: 20px; top: 12px; font-family: 'Fira Code', monospace; font-size: 0.9em; font-weight: 500;">
+                <a href="/setup" style="color: #7aa2f7; text-decoration: none; margin-right: 15px;">[Setup Guide]</a>
+                <a href="/analytics" style="color: #bb9af7; text-decoration: none; margin-right: 15px;">[Analytics]</a>
+                <a href="/logout" style="color: #f7768e; text-decoration: none;">[Logout]</a>
+            </div>
+        </div>
+        
+        <div class="terminal-body" id="terminal-body" style="display: flex; flex-direction: column;">
+            <div id="os-info" style="color: #787c99; font-family: 'Fira Code', monospace; font-size: 0.9em; margin-bottom: 2px;">
+                Checking network topology...
+            </div>
+            
+            <div style="background: #1a1b26; margin: 10px 0 20px 0; padding: 10px; border-left: 3px solid #ff9e64; font-family: 'Fira Code', monospace; font-size: 0.85em; color: #a9b1d6;">
+                <span style="color: #ff9e64; font-weight: bold;">[RUNNER REQUIRED]</span> Open your local Linux terminal and securely handshake to the server by running:<br>
+                <code style="display: block; margin-top: 5px; color: #9ece6a; background: #0f111a; padding: 5px;">sudo python3 agent.py --token={{ api_token }}</code>
+            </div>
+            <div class="startup-msg">
+                <pre>
+   __  __      _                          __ 
+  / / / /___  (_)   _____  _______________/ / 
+ / / / / __ \/ / | / / _ \/ ___/ ___/ __  /  
+/ /_/ / / / / /| |/ /  __/ /  (__  ) /_/ /   
+\____/_/ /_/_/ |___/\___/_/  /____/\__,_/    
+                                             
+                </pre>
+                <div id="os-info">Detecting OS...</div>
+                <div class="help-text">Type any Linux command (apt, dnf, pacman). It will be auto-translated for your OS.</div>
+                <br>
+            </div>
+            <div id="xterm-container" style="flex-grow: 1; min-height: 300px; width: 100%;"></div>
+            
+            <div class="input-line" style="margin-top: 10px;">
+                <span class="prompt" id="prompt-prefix">user@linux:~$ </span>
+                <input type="text" id="cmd-input" maxlength="1024" autocomplete="off" spellcheck="false" autofocus>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

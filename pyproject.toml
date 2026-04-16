@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "universal-terminal-agent"
+version = "1.0.0"
+description = "Secure Remote Execution Agent for Universal Linux Terminal"
+readme = "README.md"
+authors = [
+    { name = "Karan", email = "karan@example.com" }
+]
+requires-python = ">=3.8"
+dependencies = [
+    "python-socketio[client]>=5.10.0",
+    "requests>=2.31.0",
+]
+
+[project.scripts]
+universal-agent = "universal_terminal_agent.agent:main"
+universal-shim = "universal_terminal_agent.universal:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["universal_terminal_agent*"]

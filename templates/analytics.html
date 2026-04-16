@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Universal Linux Terminal - Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <div class="terminal-container" style="width: 600px; max-width: 90%; height: auto; min-height: 450px;">
+        <div class="terminal-header">
+            <div class="circles">
+                <div class="circle red"></div>
+                <div class="circle yellow"></div>
+                <div class="circle green"></div>
+            </div>
+            <div class="title">System Analytics Dashboard</div>
+            <div style="position: absolute; right: 20px; top: 12px; font-family: 'Fira Code', monospace; font-size: 0.9em; font-weight: 500;">
+                <a href="/" style="color: #7aa2f7; text-decoration: none;">[Return]</a>
+            </div>
+        </div>
+        <div style="padding: 30px; font-family: 'Fira Code', monospace; color: #a9b1d6; background: #1a1b26; height: calc(100% - 40px); border-bottom-left-radius: 10px; border-bottom-right-radius: 10px;">
+            <h2 style="color: #bb9af7; margin-bottom: 5px;">User: {{ username }}</h2>
+            <p style="color: #787c99; font-size: 0.9em; margin-bottom: 25px;">Total Commands Executed: <span style="color: #e0af68; font-weight: bold;">{{ total_commands }}</span></p>
+            
+            <h3 style="color: #9ece6a; margin-bottom: 15px;">Top Command Frequencies:</h3>
+            
+            <ul style="list-style-type: none; padding: 0;">
+                {% for row in top_commands %}
+                <li style="margin-bottom: 10px; border-bottom: 1px dashed #444b6a; padding-bottom: 5px; display: flex; justify-content: space-between;">
+                    <span style="color: #7da6ff; font-family: 'Fira Code', monospace;">{{ row.command_string }}</span>
+                    <span style="color: #ff9e64;">{{ row.count }} <span style="color: #787c99; font-size: 0.8em;">uses</span></span>
+                </li>
+                {% else %}
+                <li style="color: #f7768e;">No commands executed yet.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
