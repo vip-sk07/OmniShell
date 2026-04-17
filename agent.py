@@ -123,7 +123,7 @@ def start_pty(token):
 def main():
     parser = argparse.ArgumentParser(description="Terminal Secure Client Runner (PTY Mode)")
     parser.add_argument("--token", required=True, help="Your User API Connection Token")
-    parser.add_argument("--url", default="http://localhost:5050", help="Web Dashboard URL")
+    parser.add_argument("--url", default="https://omnishell.onrender.com", help="Web Dashboard URL")
     args = parser.parse_args()
     
     global SERVER_URL
