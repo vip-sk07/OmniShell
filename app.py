@@ -242,13 +242,15 @@ def register():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
-        if User.query.filter_by(username=username).first():
-            return render_template('register.html', error="Username already exists")
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return render_template('register.html', error="Username already exists. Please choose another or login.")
         
         hashed_password = generate_password_hash(password)
         new_user = User(username=username, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+        print(f"[Auth Debug] New user registered: {username}")
         return redirect(url_for('login'))
     return render_template('register.html')
 
