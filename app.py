@@ -167,6 +167,9 @@ def handle_browser_input(data):
     agent_sid = active_agents.get(session['user_id'])
     if agent_sid:
         emit('browser_input', data, to=agent_sid)
+    else:
+        # If no agent is connected, reflect output back to terminal to avoid "dead" feel
+        emit('command_output', {'output': '\r\n\x1b[31m[System] No Agent Connected. Please run the local handshake command.\x1b[0m\r\n'})
 
 # 1.3 BROWSER sends resize
 @socketio.on('resize_terminal')

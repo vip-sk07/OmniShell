@@ -16,7 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from detector import detect_os
 
 sio = socketio.Client()
-SERVER_URL = "http://localhost:5050"
+SERVER_URL = "https://omnishell.onrender.com"
 # Master FD for the PTY
 fd = None
 child_pid = None
