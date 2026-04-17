@@ -5,6 +5,7 @@ import secrets
 db = SQLAlchemy()
 
 class User(db.Model):
+    __tablename__ = 'app_users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(256), nullable=False)
@@ -15,6 +16,6 @@ class User(db.Model):
 
 class CommandHistory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('app_users.id'), nullable=False)
     command_string = db.Column(db.String(1024), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)

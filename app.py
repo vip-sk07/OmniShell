@@ -24,6 +24,10 @@ if database_url and database_url.startswith("postgres://"):
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///terminal.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    "pool_pre_ping": True,
+    "pool_recycle": 300,
+}
 
 db.init_app(app)
 
@@ -239,14 +243,20 @@ def logout():
 @app.route('/')
 @login_required
 def index():
-    user = User.query.get(session['user_id'])
-    return render_template('index.html', username=session.get('username'), api_token=user.api_token)
+    user = db.session.get(User, session.get('user_id'))
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
+    return render_template('index.html', username=user.username, api_token=user.api_token)
 
 @app.route('/setup')
 @login_required
 def setup():
-    user = User.query.get(session['user_id'])
-    return render_template('setup.html', username=session.get('username'), api_token=user.api_token)
+    user = db.session.get(User, session.get('user_id'))
+    if not user:
+        session.clear()
+        return redirect(url_for('login'))
+    return render_template('setup.html', username=user.username, api_token=user.api_token)
 
 @app.route('/download_agent')
 @login_required
