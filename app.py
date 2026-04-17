@@ -54,8 +54,6 @@ with app.app_context():
 async_mode = 'eventlet' if os.environ.get("RENDER") else 'threading'
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode=async_mode)
 
-    db.create_all()
-
 ALLOWED_COMMANDS = {
     # existing commands
     "ls", "pwd", "cat", "echo", "apt", "apt-get", "dnf", "yum", "pacman", "apk", "zypper", 
