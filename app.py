@@ -27,8 +27,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 
-# Allow eventlet/unsafe testing logic
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode=None)
+# Smart Async Mode Detection
+# (Render uses eventlet for performance; Local Parrot OS uses threading to avoid 'GreenSocket' crashes)
+async_mode = 'eventlet' if os.environ.get("RENDER") else 'threading'
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode=async_mode)
 
 with app.app_context():
     db.create_all()
