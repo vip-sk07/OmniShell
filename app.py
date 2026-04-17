@@ -315,6 +315,25 @@ def analytics():
                            top_commands=top_commands,
                            total_commands=total_commands)
 
+@app.route('/db_check')
+def db_check():
+    results = {
+        "database_url_configured": bool(os.environ.get("DATABASE_URL")),
+        "db_type": "PostgreSQL" if os.environ.get("DATABASE_URL") else "SQLite",
+        "connection_test": "In Progress...",
+        "tables_found": [],
+        "errors": None
+    }
+    try:
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        results["tables_found"] = inspector.get_table_names()
+        results["connection_test"] = "SUCCESS"
+    except Exception as e:
+        results["connection_test"] = "FAILED"
+        results["errors"] = str(e)
+    return jsonify(results)
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5050))
     debug_mode = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
