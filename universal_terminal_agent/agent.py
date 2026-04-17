@@ -134,7 +134,8 @@ def main():
 
     print(f"[Agent] Connecting to Cloud Platform {SERVER_URL} via Websockets...")
     try:
-        sio.connect(SERVER_URL, auth={'token': args.token})
+        # Use polling first, then upgrade to websocket for better cloud compatibility
+        sio.connect(SERVER_URL, auth={'token': args.token}, transports=['polling', 'websocket'], wait_timeout=15)
         sio.wait()
     except KeyboardInterrupt:
         print("\n[Agent] Stopping and disconnecting...")
