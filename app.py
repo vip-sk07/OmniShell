@@ -82,23 +82,26 @@ agent_footprints = {}
 
 # --- WebSocket Broker ---
 @socketio.on('connect')
-def wss_connect(auth):
+def wss_connect(auth=None):
+    print(f"[Agent] Attempting connection to Cloud Platform via Websockets...")
     # Agent Auth
     if auth and 'token' in auth:
         token = auth['token']
         user = User.query.filter_by(api_token=token).first()
         if not user:
-            print(f"[WSS Debug] Authentication failed for token: {token[:10]}...")
+            print(f"[WSS Debug] AUTH FAILED: No user found for token starting with {token[:8]}")
             return False 
         active_agents[user.id] = request.sid
-        print(f"[WSS Debug] Agent connected for user: {user.username}")
+        print(f"[WSS Debug] SUCCESS: Agent connected for {user.username}")
         return True
     
     # Browser Auth
-    if 'user_id' not in session:
-        print("[WSS Debug] Browser connection rejected: No user_id in session")
-        return False
-    return True
+    if 'user_id' in session:
+        print(f"[WSS Debug] SUCCESS: Browser connected for session user {session['user_id']}")
+        return True
+        
+    print("[WSS Debug] AUTH FAILED: Unidentified connection rejected")
+    return False
 
 @socketio.on('disconnect')
 def wss_disconnect():
