@@ -85,14 +85,18 @@ agent_footprints = {}
 def wss_connect(auth):
     # Agent Auth
     if auth and 'token' in auth:
-        user = User.query.filter_by(api_token=auth['token']).first()
+        token = auth['token']
+        user = User.query.filter_by(api_token=token).first()
         if not user:
-            return False # Reject
+            print(f"[WSS Debug] Authentication failed for token: {token[:10]}...")
+            return False 
         active_agents[user.id] = request.sid
+        print(f"[WSS Debug] Agent connected for user: {user.username}")
         return True
-        
+    
     # Browser Auth
     if 'user_id' not in session:
+        print("[WSS Debug] Browser connection rejected: No user_id in session")
         return False
     return True
 
