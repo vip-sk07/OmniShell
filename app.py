@@ -340,9 +340,11 @@ def analytics():
 
 
 if __name__ == '__main__':
-
-
-if __name__ == '__main__':
+    with app.app_context():
+        # One-time reset to ensure clean state
+        db.drop_all()
+        db.create_all()
+    
     port = int(os.environ.get("PORT", 5050))
     debug_mode = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
     socketio.run(app, host='0.0.0.0', port=port, debug=debug_mode, allow_unsafe_werkzeug=True)
