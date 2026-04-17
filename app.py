@@ -42,12 +42,18 @@ else:
 
 db.init_app(app)
 
+# --- Global Database Reset (One-time) ---
+with app.app_context():
+    # This will ensure the 'user' table is gone and 'app_users' is created fresh
+    db.drop_all()
+    db.create_all()
+
+# --- Security Shims ---
 # Smart Async Mode Detection
 # (Render uses eventlet for performance; Local Parrot OS uses threading to avoid 'GreenSocket' crashes)
 async_mode = 'eventlet' if os.environ.get("RENDER") else 'threading'
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode=async_mode)
 
-with app.app_context():
     db.create_all()
 
 ALLOWED_COMMANDS = {
