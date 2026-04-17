@@ -1,4 +1,9 @@
 import os
+import os
+if os.environ.get("RENDER"):
+    import eventlet
+    eventlet.monkey_patch()
+
 import shlex
 import shutil
 import tempfile
@@ -24,10 +29,16 @@ if database_url and database_url.startswith("postgres://"):
 
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///terminal.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "pool_pre_ping": True,
-    "pool_recycle": 300,
-}
+if os.environ.get("RENDER"):
+    from sqlalchemy.pool import NullPool
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "poolclass": NullPool,
+    }
+else:
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "pool_pre_ping": True,
+        "pool_recycle": 300,
+    }
 
 db.init_app(app)
 
