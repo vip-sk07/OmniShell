@@ -354,6 +354,15 @@ def db_check():
         results["errors"] = str(e)
     return jsonify(results)
 
+@app.route('/emergency_reset_database')
+def emergency_reset_database():
+    try:
+        db.drop_all()
+        db.create_all()
+        return jsonify({"status": "SUCCESS", "message": "Database completely reset and rebuilt!"})
+    except Exception as e:
+        return jsonify({"status": "FAILED", "error": str(e)})
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5050))
     debug_mode = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
