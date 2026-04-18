@@ -74,6 +74,8 @@ cd "$INSTALL_DIR"
 echo -e "${BLUE}[3/5] Setting up Python Sandbox...${NC}"
 python3 -m venv venv
 source venv/bin/activate
+echo -e "${BLUE}Upgrading base sandbox tools (pip, setuptools, wheel)...${NC}"
+./venv/bin/pip install --upgrade pip setuptools wheel
 
 # 5. Copy Build Files
 echo -e "${BLUE}[4/5] Copying application files...${NC}"
@@ -83,7 +85,7 @@ cp "$SOURCE_DIR/pyproject.toml" .
 
 # Install the package locally inside the VENV
 echo -e "${BLUE}[5/5] Finalizing installation...${NC}"
-./venv/bin/pip install . > /dev/null
+./venv/bin/pip install .
 
 # Link the binaries to system path
 ln -sf "$INSTALL_DIR/venv/bin/universal-agent" /usr/local/bin/universal-agent
