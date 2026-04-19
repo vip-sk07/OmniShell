@@ -42,10 +42,8 @@ else:
 
 db.init_app(app)
 
-# --- Global Database Reset (One-time) ---
+# --- Database Initialization ---
 with app.app_context():
-    # This will ensure the 'user' table is gone and 'app_users' is created fresh
-    db.drop_all()
     db.create_all()
 
 # --- Security Shims ---
