@@ -2,6 +2,8 @@
 
 A distributed, secure, and cross-distribution terminal emulator that allows you to control multiple Linux machines from a single web dashboard with automatic command translation.
 
+🌐 **Live Demo / Public Access**: [https://omnishell.onrender.com/](https://omnishell.onrender.com/)
+
 ## 🏗️ Architecture
 - **Web Dashboard (Server)**: A Flask-SocketIO broker that routes commands and displays real-time output.
 - **Remote Runner (Agent)**: A Python-based agent that connects securely via WebSockets and manages a Pseudo-Terminal (PTY) session.
@@ -48,4 +50,3 @@ Go back to your browser. You can now type any Linux command (even from other dis
 - **Universal Translation**: Type `pacman` commands on Debian; it works automatically.
 - **Analytical Dashboard**: Track command history and usage frequency.
 - **Secure Handshake**: 256-bit encrypted API token authentication.
-# OmniShell
