@@ -47,13 +47,30 @@ if check_deps; then
     echo -e "${GREEN}Prerequisites already satisfied. Skipping system updates.${NC}"
 else
     echo -e "${BLUE}Missing dependencies found. Attempting to install (requires internet)...${NC}"
-    # Make update non-fatal. If it fails, maybe the cache is already good enough for install.
-    apt-get update -qq || echo -e "${RED}Warning: apt update failed. Checking internet connection...${NC}"
-    
-    if ! apt-get install -y python3-pip python3-venv python3-full build-essential > /dev/null; then
+    FAILED=0
+    if command -v apt-get >/dev/null 2>&1; then
+        apt-get update -qq || echo -e "${RED}Warning: apt update failed. Checking internet connection...${NC}"
+        if ! apt-get install -y python3-pip python3-venv python3-full build-essential > /dev/null; then FAILED=1; fi
+    elif command -v dnf >/dev/null 2>&1; then
+        if ! dnf install -y python3-pip gcc gcc-c++ make > /dev/null; then FAILED=1; fi
+    elif command -v yum >/dev/null 2>&1; then
+        if ! yum install -y python3-pip gcc gcc-c++ make > /dev/null; then FAILED=1; fi
+    elif command -v pacman >/dev/null 2>&1; then
+        if ! pacman -Sy --noconfirm python-pip base-devel > /dev/null; then FAILED=1; fi
+    elif command -v zypper >/dev/null 2>&1; then
+        if ! zypper install -y python3-pip gcc gcc-c++ make > /dev/null; then FAILED=1; fi
+    elif command -v apk >/dev/null 2>&1; then
+        if ! apk add python3 py3-pip build-base > /dev/null; then FAILED=1; fi
+    else
+        echo -e "${RED}[Error] No supported package manager found (apt, dnf, yum, pacman, zypper, apk).${NC}"
+        echo -e "${RED}Please install python3, pip, and build tools manually.${NC}"
+        exit 1
+    fi
+
+    if [ $FAILED -ne 0 ]; then
         echo -e "${RED}[Error] Failed to install system dependencies.${NC}"
-        echo -e "${RED}Your machine is reporting: 'Failed to fetch' error.${NC}"
-        echo -e "${RED}Please check your internet connection or run 'sudo apt update' manually to fix your mirrors.${NC}"
+        echo -e "${RED}Your machine is reporting a package manager error.${NC}"
+        echo -e "${RED}Please check your internet connection or run your package manager update manually.${NC}"
         exit 1
     fi
 fi
