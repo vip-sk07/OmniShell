@@ -38,9 +38,16 @@ fi
 # 2. Check and Install System Dependencies
 echo -e "${BLUE}[1/5] Checking system prerequisites...${NC}"
 
-# Function to check if Python venv and pip are actually working
 check_deps() {
-    python3 -m venv --help > /dev/null 2>&1 && command -v pip3 > /dev/null 2>&1
+    if ! command -v python3 >/dev/null 2>&1; then return 1; fi
+    if python3 -m venv /tmp/test_venv_$$ >/dev/null 2>&1; then
+        if [ -x "/tmp/test_venv_$$/bin/pip" ]; then
+            rm -rf /tmp/test_venv_$$
+            return 0
+        fi
+        rm -rf /tmp/test_venv_$$
+    fi
+    return 1
 }
 
 if check_deps; then
