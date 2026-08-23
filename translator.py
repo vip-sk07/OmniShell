@@ -501,5 +501,36 @@ def translate_command(command, target_pkg_manager, target_init_system="systemd")
         return final_cmd
         
     if is_sudo:
-        return f"sudo {' '.join(parts)}"
-    return command
+        fallback_cmd = f"sudo {' '.join(parts)}"
+    else:
+        fallback_cmd = command
+        
+    # If not found in static dictionary, use LLM for dynamic translation!
+    return ask_llm_to_translate(fallback_cmd, target_pkg_manager, target_init_system)
+import urllib.request
+import json
+
+def ask_llm_to_translate(command, target_pkg, target_init):
+    prompt = f"Translate this Linux command: '{command}'\nTarget package manager: {target_pkg}\nTarget init system: {target_init}\nReturn ONLY the exact raw terminal command. No explanations, no markdown, no quotes."
+    
+    payload = json.dumps({
+        "model": "llama3", 
+        "messages": [{"role": "user", "content": prompt}], 
+        "stream": False
+    }).encode()
+    
+    try:
+        req = urllib.request.Request(
+            "http://localhost:11434/api/chat", 
+            data=payload, 
+            headers={"Content-Type": "application/json"}, 
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            data = json.loads(resp.read())
+            reply = data.get("message", {}).get("content", "").strip()
+            if reply.startswith("`"):
+                reply = reply.strip("`")
+            return reply.strip()
+    except Exception:
+        return command
