@@ -1,5 +1,4 @@
 import os
-import os
 if os.environ.get("RENDER"):
     import eventlet
     eventlet.monkey_patch()
@@ -27,6 +26,20 @@ if database_url and database_url.startswith("postgres://"):
     # Fix for SQLAlchemy 1.4+ which requires 'postgresql://' instead of 'postgres://'
     database_url = database_url.replace("postgres://", "postgresql://", 1)
 
+if database_url:
+    try:
+        from sqlalchemy import create_engine
+        print(f"[DB] Testing connection to primary database...")
+        connect_args = {"connect_timeout": 5} if database_url.startswith("postgresql") else {}
+        test_engine = create_engine(database_url, connect_args=connect_args)
+        with test_engine.connect() as conn:
+            pass
+        print(f"[DB] Primary database connection successful.")
+    except Exception as e:
+        print(f"[DB] WARNING: Primary database connection failed: {e}")
+        print(f"[DB] Falling back to local SQLite database.")
+        database_url = None
+
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url or 'sqlite:///terminal.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 if os.environ.get("RENDER"):
@@ -44,7 +57,10 @@ db.init_app(app)
 
 # --- Database Initialization ---
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+    except Exception as e:
+        print(f"[DB] WARNING: Failed to initialize database tables: {e}")
 
 # --- Security Shims ---
 # Smart Async Mode Detection
@@ -343,9 +359,12 @@ def analytics():
 
 if __name__ == '__main__':
     with app.app_context():
-        # One-time reset to ensure clean state
-        db.drop_all()
-        db.create_all()
+        try:
+            # One-time reset to ensure clean state
+            db.drop_all()
+            db.create_all()
+        except Exception as e:
+            print(f"[DB] WARNING: Failed to reset database tables: {e}")
     
     port = int(os.environ.get("PORT", 5050))
     debug_mode = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
